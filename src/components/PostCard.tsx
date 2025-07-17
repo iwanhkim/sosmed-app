@@ -87,7 +87,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
 
             {/* POST HEADER & TEXT CONTENT */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between">
+              <div className="flex items-center justify-between">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 truncate">
                   <Link
                     href={`/profile/${post.author.username}`}
@@ -108,10 +108,10 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                     onDelete={handleDeletePost}
                   />
                 )}
-              </div>
-              <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>
+              </div>  
             </div>
           </div>
+          <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>
 
           {/* POST IMAGE */}
           {post.image && (
