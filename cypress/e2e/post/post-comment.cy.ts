@@ -1,6 +1,6 @@
 describe("Post Feature - Comment Post", () => {
   context("Negative Cases", () => {
-    it("should prevent unauthenticated users from liking a post", () => {
+    it("should prevent unauthenticated users from commenting on a post", () => {
       cy.visit("/");
       cy.get("div.space-y-6")
         .first()
@@ -12,7 +12,7 @@ describe("Post Feature - Comment Post", () => {
   });
 
   context("Positive Cases", () => {
-    it("should allow authenticated user to like another user's post", () => {
+    it("should allow authenticated users to comment on another user's post", () => {
       const user = Cypress.env("user");
       cy.signIn(user.email, user.password);
 
