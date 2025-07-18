@@ -2,7 +2,7 @@
 
 import { createComment, deletePost, getPosts, toggleLike } from "@/actions/post.action";
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "./ui/card";
 import Link from "next/link";
@@ -22,9 +22,19 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const [isCommenting, setIsCommenting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === dbUserId));
-  const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [optimisticLikes, setOptmisticLikes] = useState(0);
   const [showComments, setShowComments] = useState(false);
+  const [createdAgo, setCreatedAgo] = useState("");
+
+  useEffect(() => {
+    setHasLiked(post.likes.some((like) => like.userId === dbUserId));
+    setOptmisticLikes(post._count.likes);
+  }, [post.likes, dbUserId, post._count.likes]);
+
+  useEffect(() => {
+    setCreatedAgo(formatDistanceToNow(new Date(post.createdAt)) + " ago");
+  }, [post.createdAt]);
 
   const handleLike = async () => {
     if (isLiking) return;
@@ -98,7 +108,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Link href={`/profile/${post.author.username}`}>@{post.author.username}</Link>
                     <span>•</span>
-                    <span>{formatDistanceToNow(new Date(post.createdAt))} ago</span>
+                   <span>{createdAgo}</span>
                   </div>
                 </div>
                 {/* Check if current user is the post author */}
