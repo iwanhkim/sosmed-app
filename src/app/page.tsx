@@ -4,6 +4,7 @@ import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
 import { currentUser } from "@clerk/nextjs/server";
+import { Suspense } from "react";
 
 export default async function Home() {
   const user = await currentUser();
@@ -17,13 +18,12 @@ export default async function Home() {
 
         <div className="space-y-6">
           {/* Posts */}
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              dbUserId={dbUserId}
-            />
-          ))}
+          
+          <Suspense fallback={<div>Loading posts...</div>}>
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} dbUserId={dbUserId} />
+            ))}
+          </Suspense>
         </div>
       </div>
 
