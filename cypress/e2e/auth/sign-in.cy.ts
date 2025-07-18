@@ -1,6 +1,5 @@
 describe("Sign In Feature", () => {
   beforeEach(() => {
-    cy.viewport(1280, 800);
     cy.visit("/");
   });
 
