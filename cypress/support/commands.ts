@@ -25,15 +25,21 @@ Cypress.Commands.add("signUpANewAccount", (username: string) => {
 
 Cypress.Commands.add("signOut", () => {
   cy.get('button[aria-label="Open user button"]').click();
-  cy.contains("button", "Sign out").click();
+  cy.contains("button", "Sign out").click({ force: true });
 });
 
 Cypress.on("uncaught:exception", (err, runnable) => {
-  if (err.message.includes("Text content does not match server-rendered HTML")) {
+  if (
+    err.message.includes("Text content does not match server-rendered HTML")
+  ) {
     return false;
   }
 
-  if (err.message.includes("There was an error while hydrating this Suspense boundary. Switched to client rendering.")) {
+  if (
+    err.message.includes(
+      "There was an error while hydrating this Suspense boundary. Switched to client rendering."
+    )
+  ) {
     return false;
   }
   return true;

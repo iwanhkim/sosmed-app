@@ -17,14 +17,18 @@ describe("Post Feature - Like Post", () => {
 
   context("Positive Cases", () => {
     it("should allow authenticated user to like another user's post", () => {
-      const user = Cypress.env("user");
-      cy.signIn(user.email, user.password);
-
+      const uniqueUsername = `user_${Date.now()}`;
+      cy.signUpANewAccount(uniqueUsername);
       const postContent = `postContent_${Date.now()}`;
       cy.get('textarea[placeholder="What\'s on your mind?"]').type(postContent);
       cy.contains("button", "Post").click();
       cy.contains(postContent).should("be.visible");
+      cy.signOut();
       cy.reload();
+
+      const user = Cypress.env("user");
+      cy.signIn(user.email, user.password);
+      cy.wait(5000);
       cy.contains(postContent)
         .parents("div.space-y-4")
         .within(() => {
