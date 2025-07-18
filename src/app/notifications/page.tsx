@@ -78,7 +78,7 @@ function NotificationsPage() {
                     <div className="flex items-center gap-2">
                       {getNotificationIcon(notification.type)}
                       <span>
-                        <span className="font-medium">{notification.creator.name ?? notification.creator.username}</span>{" "}
+                        <span className="font-medium">{notification.creator.username}</span>{" "}
                         {notification.type === "FOLLOW" ? "started following you" : notification.type === "LIKE" ? "liked your post" : "commented on your post"}
                       </span>
                     </div>
