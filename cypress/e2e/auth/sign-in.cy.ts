@@ -8,8 +8,8 @@ describe("Sign In Feature", () => {
       cy.contains("button", "Sign In").click();
       cy.contains("button", "Continue").click();
       cy.get("#identifier-field").then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-        expect($input[0].validationMessage).to.eq("Please fill out this field.");
+        expect(($input[0] as HTMLInputElement).checkValidity()).to.be.false;
+        expect(($input[0] as HTMLInputElement).validationMessage).to.eq("Please fill out this field.");
       });
     });
 

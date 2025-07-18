@@ -9,16 +9,16 @@ describe("Sign Up Feature", () => {
       cy.contains("button", "Continue").click();
 
       cy.get("#emailAddress-field").then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-        expect($input[0].validationMessage).to.eq("Please fill out this field.");
+        expect(($input[0] as HTMLInputElement).checkValidity()).to.be.false;
+        expect(($input[0] as HTMLInputElement).validationMessage).to.eq("Please fill out this field.");
       });
 
       cy.get("#emailAddress-field").type("validemailformat@gmail.com");
       cy.contains("button", "Continue").click();
 
       cy.get("#password-field").then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-        expect($input[0].validationMessage).to.eq("Please fill out this field.");
+        expect(($input[0] as HTMLInputElement).checkValidity()).to.be.false;
+        expect(($input[0] as HTMLInputElement).validationMessage).to.eq("Please fill out this field.");
       });
     });
 
