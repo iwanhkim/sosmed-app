@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "cy:run": "cypress run",
+    "cy:run": "cypress run --browser chrome",
     "cy:open": "cypress open"
   },
   "dependencies": {
