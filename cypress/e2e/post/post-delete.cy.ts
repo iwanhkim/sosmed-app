@@ -21,13 +21,14 @@ describe("Post Feature - Delete Post", () => {
   });
 
   context("Positive Cases", () => {
-    it("should create a post and persist after reload", () => {
+    it("should allow user to create and delete their own post successfully", () => {
       const user = Cypress.env("user");
       cy.signIn(user.email, user.password);
 
       const postContent = `postContent_${Date.now()}`;
       cy.get('textarea[placeholder="What\'s on your mind?"]').type(postContent);
       cy.contains("button", "Post").click();
+      cy.wait(5000);
       cy.contains(postContent).should("be.visible");
       cy.reload();
       cy.contains(postContent)
