@@ -1,0 +1,67 @@
+name: Deploy to Dev and Test with Cypress
+
+on:
+  push:
+    branches:
+      - development
+
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  Deploy-Dev:
+    runs-on: ubuntu-latest
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.preview_url }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Pull Vercel Environment Info
+        run: vercel pull --yes --environment=development --token=$VERCEL_TOKEN
+
+      - name: Build Project
+        run: vercel build --token=$VERCEL_TOKEN
+
+      - name: Deploy to Development
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN --environment=development)
+          echo "preview_url=$url" >> $GITHUB_OUTPUT
+
+  Cypress-Test:
+    needs: Deploy-Dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - run: npm ci
+
+      - name: Set Preview URL as Cypress Env
+        run: |
+          echo "CYPRESS_BASE_URL=${{ needs.Deploy-Dev.outputs.preview_url }}" >> $GITHUB_ENV
+
+      - name: Run Cypress Tests
+        run: npm run cy:run
+
+      - name: Upload Cypress Screenshots if Failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Upload Cypress Videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: cypress/videos

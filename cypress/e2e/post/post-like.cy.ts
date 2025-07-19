@@ -58,9 +58,7 @@ describe("Post Feature - Like Post", () => {
       cy.signIn(user.email, user.password);
 
       const postContent = `postContent_${Date.now()}`;
-      cy.get('textarea[placeholder="What\'s on your mind?"]', {
-        timeout: 10000,
-      }).type(postContent);
+      cy.get('textarea[placeholder="What\'s on your mind?"]').type(postContent);
       cy.contains("button", "Post").click();
       cy.contains(postContent).should("be.visible");
       cy.contains(postContent)
