@@ -24,11 +24,11 @@ jobs:
       - name: Pull Vercel Environment Info
         run: vercel pull --yes --environment=development --token=$VERCEL_TOKEN
 
-      - name: 🔍 Debug .env
-        run: cat .env
+      - name: list file
+        run: ls
 
       - name: Build Project
-        run: vercel build --token=$VERCEL_TOKEN
+        run: vercel build --environment=development --token=$VERCEL_TOKEN
 
       - name: Deploy to Development
         id: deploy
