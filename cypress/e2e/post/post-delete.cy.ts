@@ -4,9 +4,7 @@ describe("Post Feature - Delete Post", () => {
       const postContent = `postContent_${Date.now()}`;
       const uniqueUsername = `user_${Date.now()}`;
       cy.signUpANewAccount(uniqueUsername);
-      cy.get('textarea[placeholder="What\'s on your mind?"]', {
-        timeout: 10000,
-      }).type(postContent);
+      cy.get('textarea[placeholder="What\'s on your mind?"]').type(postContent);
       cy.contains("button", "Post").click();
       cy.contains(postContent).should("be.visible");
       cy.signOut();

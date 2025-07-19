@@ -54,7 +54,7 @@ describe("Sign In Feature", () => {
       cy.contains("button", "Continue").click();
       cy.get("#password-field").type("testinggmailcom");
       cy.contains("button", "Continue").click();
-      cy.get('button[aria-label="Open user button"]', { timeout: 10000 }).click();
+      cy.get('button[aria-label="Open user button"]').click();
       cy.contains("button", "Sign out").should("be.visible");
     });
   });

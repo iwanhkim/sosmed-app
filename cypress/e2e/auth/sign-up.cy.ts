@@ -62,7 +62,7 @@ describe("Sign Up Feature", () => {
       cy.get("#emailAddress-field").type(uniqueEmail);
       cy.get("#password-field").type("mysup3rs3cr3tp4Ssw0rd");
       cy.contains("button", "Continue").click();
-      cy.get('button[aria-label="Open user button"]', { timeout: 10000 }).click();
+      cy.get('button[aria-label="Open user button"]').click();
       cy.contains("button", "Sign out").should("be.visible");
     });
   });
