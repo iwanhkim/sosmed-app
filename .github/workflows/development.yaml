@@ -23,9 +23,6 @@ jobs:
 
       - name: Pull Vercel Environment Info
         run: vercel pull --yes --environment=development --token=$VERCEL_TOKEN
-      
-      - name: 🔍 Debug .env.local
-        run: cat .env.local
 
       - name: 🔍 Debug .env
         run: cat .env
