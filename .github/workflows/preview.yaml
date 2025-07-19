@@ -43,12 +43,13 @@ jobs:
         with:
           node-version: 18
 
-      - run: npm ci
+      - name: NPM Clean Install
+        run: npm ci
 
       - name: Run Cypress Test on Preview URL
-        run: |
-          echo "CYPRESS_BASE_URL=${{ needs.Deploy-Preview.outputs.preview_url }}" >> $GITHUB_ENV
-          npm run cy:run
+        run: npm run cy:run
+        env:
+          CYPRESS_BASE_URL: ${{ needs.Deploy-Preview.outputs.preview_url }}
 
       - name: Upload Cypress Screenshots if Failed
         if: failure()
