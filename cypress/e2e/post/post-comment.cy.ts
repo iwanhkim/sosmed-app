@@ -34,6 +34,13 @@ describe("Post Feature - Comment Post", () => {
       const comment = `postComment_${Date.now()}`;
       cy.get('textarea[placeholder="Write a comment..."]').type(comment);
       cy.contains("button", "Comment").click();
+      cy.contains("button", "Posting...")
+        .should("be.visible")
+        .and("be.disabled");
+      cy.get('div[role="status"][aria-live="polite"]').should(
+        "contain.text",
+        "Comment posted successfully"
+      );
       cy.contains(comment).should("be.visible");
       cy.reload();
       cy.contains(postContent)
@@ -61,6 +68,13 @@ describe("Post Feature - Comment Post", () => {
       const comment = `postComment_${Date.now()}`;
       cy.get('textarea[placeholder="Write a comment..."]').type(comment);
       cy.contains("button", "Comment").click();
+      cy.contains("button", "Posting...")
+        .should("be.visible")
+        .and("be.disabled");
+      cy.get('div[role="status"][aria-live="polite"]').should(
+        "contain.text",
+        "Comment posted successfully"
+      );
       cy.contains(comment).should("be.visible");
       cy.reload();
       cy.contains(postContent)

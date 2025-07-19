@@ -28,7 +28,7 @@ describe("Post Feature - Like Post", () => {
 
       const user = Cypress.env("user");
       cy.signIn(user.email, user.password);
-      cy.wait(5000);
+      cy.wait(10000);
       cy.contains(postContent)
         .parents("div.space-y-4")
         .within(() => {

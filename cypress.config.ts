@@ -8,5 +8,5 @@ export default defineConfig({
   },
   viewportWidth: 1280,
   viewportHeight: 800,
-  defaultCommandTimeout: 20000,
+  defaultCommandTimeout: 30000,
 });

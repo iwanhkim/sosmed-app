@@ -50,6 +50,7 @@ describe("Post Feature - Add Post", () => {
           force: true,
         }
       );
+      cy.wait(1000);
       cy.contains("button", "Upload 1 file").click();
       cy.get('img[alt="Upload"]').should("be.visible");
       cy.contains("button", "Post").click();

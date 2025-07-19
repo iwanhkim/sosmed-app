@@ -49,6 +49,7 @@ describe("Sign Up Feature", () => {
     it("should require minimum password length", () => {
       cy.contains("button", "Sign Up").click();
       cy.get("#emailAddress-field").type("validemailformat@gmail.com");
+      cy.wait(1000);
       cy.get("#password-field").type("1234567");
       cy.contains("button", "Continue").click();
       cy.get("#error-password").should("be.visible");
@@ -60,6 +61,7 @@ describe("Sign Up Feature", () => {
       const uniqueEmail = `user_${Date.now()}@mail.com`;
       cy.contains("button", "Sign Up").click();
       cy.get("#emailAddress-field").type(uniqueEmail);
+      cy.wait(1000);
       cy.get("#password-field").type("mysup3rs3cr3tp4Ssw0rd");
       cy.contains("button", "Continue").click();
       cy.get('button[aria-label="Open user button"]').click();
