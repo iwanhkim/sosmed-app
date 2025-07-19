@@ -1,17 +1,17 @@
-name: Deploy to Dev and Test with Cypress
+name: Preview and Test with Cypress
 
 on:
   push:
-    branches:
-      - development
+    branches-ignore:
+      - main
 
 env:
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 jobs:
-  Deploy-Dev:
+  Deploy-Preview:
     runs-on: ubuntu-latest
     outputs:
       preview_url: ${{ steps.deploy.outputs.preview_url }}
@@ -22,22 +22,19 @@ jobs:
         run: npm install -g vercel
 
       - name: Pull Vercel Environment Info
-        run: vercel pull --yes --environment=development --token=$VERCEL_TOKEN
-
-      - name: list file
-        run: ls
+        run: vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
 
       - name: Build Project
-        run: vercel build --environment=development --token=$VERCEL_TOKEN
+        run: vercel build --token=$VERCEL_TOKEN
 
-      - name: Deploy to Development
+      - name: Deploy Preview
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN --environment=development)
+          url=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
           echo "preview_url=$url" >> $GITHUB_OUTPUT
 
   Cypress-Test:
-    needs: Deploy-Dev
+    needs: Deploy-Preview
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -46,14 +43,13 @@ jobs:
         with:
           node-version: 18
 
-      - run: npm ci
+      - name: NPM Clean Install
+        run: npm ci
 
-      - name: Set Preview URL as Cypress Env
-        run: |
-          echo "CYPRESS_BASE_URL=${{ needs.Deploy-Dev.outputs.preview_url }}" >> $GITHUB_ENV
-
-      - name: Run Cypress Tests
+      - name: Run Cypress Test on Preview URL
         run: npm run cy:run
+        env:
+          CYPRESS_BASE_URL: ${{ needs.Deploy-Preview.outputs.preview_url }}
 
       - name: Upload Cypress Screenshots if Failed
         if: failure()
@@ -62,7 +58,7 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
 
-      - name: Upload Cypress Videos
+      - name: Upload Cypress Videos (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
