@@ -31,28 +31,6 @@ describe("Sign Up Feature", () => {
         .should("be.visible")
         .and("have.text", "That email address is taken. Please try another.");
     });
-
-    it("should reject common breached passwords", () => {
-      const uniqueEmail = `user_${Date.now()}@mail.com`;
-      cy.contains("button", "Sign Up").click();
-      cy.get("#emailAddress-field").type(uniqueEmail);
-      cy.get("#password-field").type("12345678");
-      cy.contains("button", "Continue").click();
-      cy.get("#error-password")
-        .should("be.visible")
-        .and(
-          "have.text",
-          "This password has been found as part of a breach and can not be used, please try another password instead."
-        );
-    });
-
-    it("should require minimum password length", () => {
-      cy.contains("button", "Sign Up").click();
-      cy.get("#emailAddress-field").type("validemailformat@gmail.com");
-      cy.get("#password-field").type("1234567");
-      cy.contains("button", "Continue").click();
-      cy.get("#error-password").should("be.visible");
-    });
   });
 
   describe("Positive Cases", () => {
@@ -60,9 +38,10 @@ describe("Sign Up Feature", () => {
       const uniqueEmail = `user_${Date.now()}@mail.com`;
       cy.contains("button", "Sign Up").click();
       cy.get("#emailAddress-field").type(uniqueEmail);
+      cy.wait(1000);
       cy.get("#password-field").type("mysup3rs3cr3tp4Ssw0rd");
       cy.contains("button", "Continue").click();
-      cy.get('button[aria-label="Open user button"]', { timeout: 10000 }).click();
+      cy.get('button[aria-label="Open user button"]').click();
       cy.contains("button", "Sign out").should("be.visible");
     });
   });

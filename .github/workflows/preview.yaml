@@ -1,0 +1,59 @@
+name: Preview and Test with Cypress
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.preview_url }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Pull Vercel Environment Info
+        run: vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+
+      - name: Build Project
+        run: vercel build --token=$VERCEL_TOKEN
+
+      - name: Deploy Preview
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
+          echo "preview_url=$url" >> $GITHUB_OUTPUT
+
+  Cypress-Test:
+    needs: Deploy-Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: NPM Clean Install
+        run: npm ci
+
+      - name: Run Cypress Test on Preview URL
+        run: npm run cy:run
+        env:
+          CYPRESS_BASE_URL: ${{ needs.Deploy-Preview.outputs.preview_url }}
+
+      - name: Upload Cypress Screenshots if Failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots

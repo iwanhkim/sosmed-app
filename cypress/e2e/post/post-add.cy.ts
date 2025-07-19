@@ -21,7 +21,7 @@ describe("Post Feature - Add Post", () => {
       cy.get('input[type="file"]').selectFile("cypress/fixtures/test-pdf.pdf", {
         force: true,
       });
-      cy.get('img[alt="Upload"]', { timeout: 10000 }).should("not.exist");
+      cy.get('img[alt="Upload"]').should("not.exist");
     });
   });
 
@@ -50,29 +50,30 @@ describe("Post Feature - Add Post", () => {
           force: true,
         }
       );
+      cy.wait(1000);
       cy.contains("button", "Upload 1 file").click();
-      cy.get('img[alt="Upload"]', { timeout: 10000 }).should("be.visible");
+      cy.get('img[alt="Upload"]').should("be.visible");
       cy.contains("button", "Post").click();
       cy.get('div[role="status"][aria-live="polite"]').should(
         "contain.text",
         "Post created successfully"
       );
-      cy.contains(postContent, { timeout: 10000 }).should("be.visible");
+      cy.contains(postContent).should("be.visible");
       cy.contains(postContent)
         .parents("div.space-y-4")
         .within(() => {
-          cy.get('img[src*="utfs.io"]', { timeout: 10000 }).should(
+          cy.get('img[src*="utfs.io"]').should(
             "be.visible"
           );
         });
 
       cy.reload();
 
-      cy.contains(postContent, { timeout: 10000 }).should("be.visible");
+      cy.contains(postContent).should("be.visible");
       cy.contains(postContent)
         .parents("div.space-y-4")
         .within(() => {
-          cy.get('img[src*="utfs.io"]', { timeout: 10000 }).should(
+          cy.get('img[src*="utfs.io"]').should(
             "be.visible"
           );
         });
